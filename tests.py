@@ -13,7 +13,7 @@ class FriendTests:
         UserModule.createUsers(1)
         
         #add attributes
-        #UserModule.addFriendAttribute(0, "hello")
+        UserModule.addFriendAttribute(0, "hello")
         
         #call query
         
@@ -22,4 +22,30 @@ class FriendTests:
         
         return
     
-FriendTests.testAttributesQuery()
+    def testOneStart(): 
+        #init
+        UserModule.init()
+        
+        #create users
+        UserModule.createUsers(10)
+        
+        #save incase the next commands crash
+        UserModule.saveUsers()
+        
+        #add attributes
+        UserModule.makeRandomNumAttributes(5)
+        
+        #make query
+        #UserModule.makeFriendSearchQueryRandom(2000, 2, 2)
+        
+        #save users
+        UserModule.saveUsers()
+        
+    def testOneEnd():
+        #load users
+        UserModule.loadExistingUsers()
+        
+        #remove users
+        UserModule.removeUsers()
+    
+FriendTests.testOneEnd()
