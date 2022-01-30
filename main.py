@@ -1,6 +1,5 @@
 import pandas
 import numpy
-import requests
 from user_module import UserModule
 
 #initialize
@@ -14,6 +13,9 @@ while True:
     
     if (len >= 1):
         if (user_input[0] == "exit"):
+                #remove users
+                UserModule.removeUsers()
+            
                 exit(0)
         elif (user_input[0] == "create"):
             if (len >= 2):
