@@ -131,7 +131,7 @@ class UserModule:
         
         #for each random attribute
         for a in range(numAttributes):
-            UserModule.makeRandomAttributes(random.randint(1, numUsers / 2))
+            UserModule.makeRandomAttributes(random.randint(1, numUsers))
         
     def makeRandomAttributes(numUsers):
         attributeName = ''.join(random.choice(UserModule.lettersAndNumbers) for i in range(4))
