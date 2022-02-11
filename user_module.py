@@ -4,6 +4,7 @@ import numpy
 import string
 import random
 import requests
+import math
 
 class UserModule:
     #list of users
@@ -45,7 +46,7 @@ class UserModule:
             
             #create user in server
             myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-            response = requests.post("https://localhost:5001/api/AccountManager/Register", json = {"userName": username, "email": email, "password": password}, verify = False)
+            response = requests.post("https://localhost:5001/api/AccountManager/Register", json = {"Username": username, "Email": email, "Password": password}, verify = False)
             
             authenticationToken = ""
             
@@ -53,10 +54,15 @@ class UserModule:
                 authenticationToken = response.cookies[".AspNetCore.Identity.Application"]
             elif (response.status_code == 404):
                 print("got status code 404 for registering user")
-                print(response.content)
+                #print(response.content)
+                print(response.raw)
+                print()
             else:
                 print("got unknown status code for registering user: " + str(response.status_code))
-                print(response.request.body)
+                #print(response.request.body)
+                print()
+                print(response.content)
+                print()
                 
             #add basic information
             myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
@@ -74,10 +80,32 @@ class UserModule:
             #add users to dataframes
             UserModule.users = UserModule.users.append({"username": username, "password": password, "firstname": firstName, "lastname": lastName, "email": email, "age": age, "gender": gender, "longitude": longitude, "latitude": latitude, "friendattributes": []}, ignore_index = True)
             UserModule.usersOther = UserModule.usersOther.append({"username": username, "authentication_token": authenticationToken}, ignore_index = True)
+    
+    def makeRandomCenteredLocationEachUser(lat, long, radius):
+        for u in UserModule.users.index.values.tolist():
+            UserModule.makeRandomCenteredLocation(u, lat, long, radius)
+    
+    #make random locations for users within a certain radius
+    #max radius value is half the radius of the earth (this may too cause problems)
+    def makeRandomCenteredLocation(index, lat, long, radius):
+        #get radial components
+        rx = random.SystemRandom().uniform(-1.0, 1.0) * radius
+        ry = math.sqrt(radius ** 2.0 - rx ** 2.0) * (1.0 - 2.0 * float(random.randint(0, 1)))
+        
+        #get longitude and latitude
+        latitude = ((ry / 24901.461 * 360)) + lat
+        longitude = ((rx / 24901.461 * 360)) + long
+        
+        #set in database
+        UserModule.users.at[index, "longitude"] = longitude
+        UserModule.users.at[index, "latitude"] = latitude
+        
+        #send location to user
+        UserModule.sendLocation(index, latitude, longitude)
              
     #send locations
     def sendLocations():
-        for u in range(UserModule.users.shape[0]):
+        for u in UserModule.users.index.values.tolist():
             UserModule.sendLocation(u, UserModule.users["longitude"].iloc[0], UserModule.users["latitude"].iloc[0])
     
     #send location
@@ -85,7 +113,7 @@ class UserModule:
     def sendLocation(index, lat, long):
         authenticationToken = str(UserModule.usersOther["authentication_token"].iloc[index])
         myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-        response = requests.post("https://localhost:5001/api/User/Friends/UpdateLocation", json = {"latitude": lat, "longitude": long}, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
+        response = requests.post("https://localhost:5001/api/User/Friends/SetLocation", json = {"latitude": lat, "longitude": long}, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
         
         if (response.status_code == 200):
             #authenticationToken = response.cookies[".AspNetCore.Identity.Application"]
@@ -116,12 +144,16 @@ class UserModule:
             print("got unknown status code for addiing friend attribute: " + str(response.status_code))
             print(response.request.body)
         
-        attributeReturned = response.json()["attribute_name"]
+        try:
+            attributeReturned = response.json()["attribute_name"]
+        except Exception:
+            attributeReturned = None;
         
-        if (attributeReturned not in UserModule.friendAttributes["attribute"].values):
-            UserModule.friendAttributes = UserModule.friendAttributes.append({"attribute": attributeReturned}, ignore_index = True)
-        
-        UserModule.users.at[index, "friendattributes"] = (UserModule.users["friendattributes"].iloc[index] + [attributeReturned])
+        if (attributeReturned != None):
+            if (attributeReturned not in UserModule.friendAttributes["attribute"].values):
+                UserModule.friendAttributes = UserModule.friendAttributes.append({"attribute": attributeReturned}, ignore_index = True)
+                
+            UserModule.users.at[index, "friendattributes"] = (UserModule.users["friendattributes"].iloc[index] + [attributeReturned])
         
         return
         
@@ -140,7 +172,8 @@ class UserModule:
         
         #get random list of user indexes
         for i in range(numUsers):
-            randomList += [random.randint(0, numUsers - 1)]
+            #randomList += [random.randint(0, numUsers - 1)]
+            randomList += [random.choice(UserModule.users.index.values.tolist())]
             
         #add random users to new random attribute
         for u in randomList:
@@ -151,7 +184,7 @@ class UserModule:
         attributes = []
         
         #get index of user
-        index = random.randint(0, UserModule.users.shape[0] - 1)
+        index = random.choice(UserModule.users.index.values.tolist())
         
         print(UserModule.friendAttributes.shape[0])
         

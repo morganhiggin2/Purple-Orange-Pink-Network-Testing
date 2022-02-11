@@ -10,10 +10,11 @@ class FriendTests:
         UserModule.init()
         
         #create users
-        UserModule.createUsers(1)
+        UserModule.createUsers(4)
         
         #add attributes
-        UserModule.addFriendAttribute(0, "hello")
+        #UserModule.addFriendAttribute(0, "hello")
+        #UserModule.makeRandomNumAttributes(2)
         
         #call query
         
@@ -35,6 +36,9 @@ class FriendTests:
         #add attributes
         UserModule.makeRandomNumAttributes(5)
         
+        #set locations
+        UserModule.makeRandomCenteredLocationEachUser(-112.0745, 33.4518, 10)
+        
         #make query
         #UserModule.makeFriendSearchQueryRandom(2000, 2, 2)
         
@@ -49,3 +53,4 @@ class FriendTests:
         UserModule.removeUsers()
     
 FriendTests.testOneEnd()
+#FriendTests.testAttributesQuery()

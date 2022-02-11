@@ -1,6 +1,6 @@
 from re import X
 from PIL import Image
-from numpy import asarray
+import numpy
 import math
 import matplotlib.pyplot as plot
 #convert image of black pixels to array of points
@@ -21,7 +21,7 @@ class Point(object):
 
 def getPoints():
     img = Image.open("data/points.png")
-    numpyArray = asarray(img)
+    numpyArray = numpy.asarray(img)
     
     height = numpyArray.shape[0]
     width = numpyArray.shape[1]
@@ -41,7 +41,8 @@ def getPoints():
 #these next methods are for the algorithm
 
 #parameters for algorithm
-r_factor = 3
+
+people_per_group = 5
     
 class Group(object):
     def __init__(self, x, y):
@@ -75,8 +76,18 @@ class Group(object):
         return self.__str__()
     
 def algorithm(points, width, height):
+    #for the google maps screen, radius is max of the dimensions
+    #get all in the radius
+    #get rid of any outside of the google maps screen
+    #then perform algorithm
+    
+    #have max number before it cuts out, or max radius
+    
+    r_factor = min(5.0, (3.0/8.0) * math.log2(len(points) / 5.0) + 2.0)
+    
     R = math.sqrt((width/2)**2 + (height/2)**2)
     r = float(R) / float(r_factor)
+    #r = R / math.sqrt(float(len(points)) / float(people_per_group))
     
     groups = []
     closest = None
@@ -106,9 +117,9 @@ def algorithm(points, width, height):
     mergedGroups = []        
     #for each group, group close ones together
     
-    fig, axis = plot.subplots(3, sharex=True, sharey=True)
+    fig, axis = plot.subplots(2, sharex=True, sharey=True)
     drawPoints(points, width, height, axis[0])
-    drawGroups(groups, width, height, axis[1])
+    #drawGroups(groups, width, height, axis[1])
     
     #for each group in groups list
     for group in groups:
@@ -139,7 +150,7 @@ def algorithm(points, width, height):
         if (mergeGroup.count > 1):
             finalGroups += [mergeGroup]
     
-    drawMergedGroups(finalGroups, width, height, axis[2])
+    drawMergedGroups(finalGroups, width, height, axis[1])
     plot.show()
         
 def drawMergedGroups(groups, width, height, axis):
@@ -178,5 +189,35 @@ def drawPoints(points, width, height, axis):
     axis.scatter(xs, ys)
     axis.axis(xmin = 0, xmax=width, ymin=0, ymax=height)
 
+def plotRGraph():
+    ys1 = [32, 12.5, 8.2, 1.6, 1.3]
+    ys2 = [30.1, 11.5, 7.7, 1.41, 1.07]
+    xs = [800, 200, 100, 10, 5]
+    
+    funcX = numpy.arange(1, max(xs), 2)
+    #funcY = 0.9 * numpy.log(0.6 * funcX)
+    funcY = (32/800) * funcX
+    
+    plot.scatter(xs, ys1, color="black")
+    plot.scatter(xs, ys2, color="green")
+    plot.plot(funcX, funcY, color="blue")
+    plot.show()
+    
+'''xs = numpy.array([5, 10, 100, 200, 800])
+ys = numpy.array([1.07, 1.41, 7.7, 11.5, 30.1])
+
+a, b, c = numpy.polyfit(xs, ys, 2)
+
+funcYs = a*xs*xs + b*xs + c
+
+print(funcYs)
+
+plot.scatter(xs, ys, color="black")
+plot.plot(xs, funcYs, color="blue")
+plot.show()'''
+
 vals = getPoints()  
+print(len(vals[0]))
 algorithm(vals[0], vals[1], vals[2])
+
+plotRGraph()
