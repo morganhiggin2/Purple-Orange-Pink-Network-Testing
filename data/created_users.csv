@@ -1,11 +1,11 @@
-email,password,gender,username,latitude,age,friendattributes,longitude,firstname,lastname
-LindsayEvanLindsayEwNMRJZtVnT@gmail.com,xMjgKMwSzE,female,LindsayEwNMRJZtVnT,-112.21605218668712,46,"['asdq', 'uccs']",33.48118391365455,Lindsay,Evan
-MelissaChristopherMelissaCjQPHSlrDTC@gmail.com,eJbklNSxUA,female,MelissaCjQPHSlrDTC,-111.9304547081758,42,"['isxp', 'asdq', 'ybgp']",33.46410405790152,Melissa,Christopher
-AriaHazelAriaHLGaNgnCGrk@gmail.com,ycvMghlRqw,female,AriaHLGaNgnCGrk,-112.21875277750635,61,"['isxp', 'asdq']",33.442230667773394,Aria,Hazel
-EsmeRubyEsmeRAUcKjdviRA@gmail.com,QSqcdVySsB,male,EsmeRAUcKjdviRA,-112.21811176139416,34,"['isxp', 'asdq', 'ybgp']",33.43518380528434,Esme,Ruby
-MurrayKatieMurrayKCstbwIUmSm@gmail.com,fwhePXKYBT,female,MurrayKCstbwIUmSm,-112.2047665239241,32,"['isxp', 'asdq', 'uccs']",33.51449823508119,Murray,Katie
-AlastairJonathanAlastairJvnSlkkmxuB@gmail.com,iKmidhyenB,female,AlastairJvnSlkkmxuB,-111.93026633341042,27,[],33.461653190330544,Alastair,Jonathan
-TaylorCooperTaylorCZdViXZpJkv@gmail.com,NqXzDuiTDA,female,TaylorCZdViXZpJkv,-111.93533240672656,22,"['ybgp', 'jgdp']",33.412648794143195,Taylor,Cooper
-EdwardAidanEdwardAIbGByzsdCr@gmail.com,isQlSXVjBh,male,EdwardAIbGByzsdCr,-112.20173697556832,58,"['asdq', 'uccs']",33.383161905724364,Edward,Aidan
-BrianAmyBrianAtmkDtEBzjG@gmail.com,IUNpqKAwzV,male,BrianAtmkDtEBzjG,-111.94362246446394,58,"['uccs', 'ybgp']",33.39038740658813,Brian,Amy
-TheoMichaelTheoMNqMznPQJDO@gmail.com,UhyArUsFPm,female,TheoMNqMznPQJDO,-111.9299664398908,61,"['isxp', 'ybgp']",33.45503820007486,Theo,Michael
+gender,username,friendattributes,password,lastname,firstname,email,latitude,longitude,age
+female,EwanBLzINiePvKM,[],JIOjhzsBfO,Bruce,Ewan,EwanBruceEwanBLzINiePvKM@gmail.com,38.00619368978175,-122.32551710074388,55
+female,CarlaABlKCvakwkw,[],ojbNGWiIef,Anna,Carla,CarlaAnnaCarlaABlKCvakwkw@gmail.com,37.83241179493563,-122.13381469846853,32
+male,EllenJkZHVhbbTBx,[],KxwmVSRQGx,Jennifer,Ellen,EllenJenniferEllenJkZHVhbbTBx@gmail.com,37.912785662597415,-122.13445062251508,50
+female,SusanAlYXWQcoyme,[],ukinpghNHe,Alana,Susan,SusanAlanaSusanAlYXWQcoyme@gmail.com,38.00768704366706,-122.32151314332002,29
+female,BryanNxQCSQreYlp,['zwvk'],rZIGcASiGF,Nova,Bryan,BryanNovaBryanNxQCSQreYlp@gmail.com,37.727233162872885,-122.282354979578,35
+male,AlexanderHQANApXUmAW,['zwvk'],FLztkNFapf,Holly,Alexander,AlexanderHollyAlexanderHQANApXUmAW@gmail.com,37.98887833138718,-122.18860353527351,51
+male,PatrickSpxEzxzOEyu,[],OJyNBPVapA,Sara,Patrick,PatrickSaraPatrickSpxEzxzOEyu@gmail.com,37.73013745095867,-122.30328309208294,59
+male,KaiSHaCaIpjwst,['zwvk'],fwKBrpCcfC,Skye,Kai,KaiSkyeKaiSHaCaIpjwst@gmail.com,37.96787492915351,-122.38076042394228,30
+male,ShonaCuhHPrQUeZo,['zwvk'],nChwjCgCAh,Callum,Shona,ShonaCallumShonaCuhHPrQUeZo@gmail.com,37.73336271701591,-122.31564419054618,70
+female,KennethGoxWipnczmR,[],WHyRJACKkJ,Greg,Kenneth,KennethGregKennethGoxWipnczmR@gmail.com,37.995015617497366,-122.19787125602136,29

@@ -1,10 +1,12 @@
 from codecs import ignore_errors
+from datetime import date
 import pandas
 import numpy
 import string
 import random
 import requests
 import math
+import datetime
 
 class UserModule:
     #list of users
@@ -28,7 +30,6 @@ class UserModule:
         namesCount = UserModule.names.shape[0]
         
         for i in range(numUsers):
-            
             #generate user values
             firstName = UserModule.names["name"][random.randint(0, namesCount)]
             
@@ -46,7 +47,7 @@ class UserModule:
             
             #create user in server
             myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-            response = requests.post("https://localhost:5001/api/AccountManager/Register", json = {"Username": username, "Email": email, "Password": password}, verify = False)
+            response = requests.post("https://www.purpleorangepink.com/api/AccountManager/Register", json = {"Username": username, "Email": email, "Password": password}, verify = False)
             
             authenticationToken = ""
             
@@ -66,7 +67,7 @@ class UserModule:
                 
             #add basic information
             myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-            response = requests.post("https://localhost:5001/api/User/Generic/BasicInformation", cookies={".AspNetCore.Identity.Application": authenticationToken}, json = {"firstName": firstName, "lastName": lastName, "gender": gender, "age": age}, verify = False)
+            response = requests.post("https://www.purpleorangepink.com/api/User/Generic/UpdateUserInformation", cookies={".AspNetCore.Identity.Application": authenticationToken}, json = {"portal_type": "friends", "firstName": firstName, "lastName": lastName, "gender": gender, "age": age}, verify = False)
                         
             if (response.status_code == 200):
                 None
@@ -113,7 +114,7 @@ class UserModule:
     def sendLocation(index, lat, long):
         authenticationToken = str(UserModule.usersOther["authentication_token"].iloc[index])
         myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-        response = requests.post("https://localhost:5001/api/User/Friends/SetLocation", json = {"latitude": lat, "longitude": long}, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
+        response = requests.post("https://www.purpleorangepink.com/api/User/Generic/UpdateUserInformation", cookies={".AspNetCore.Identity.Application": authenticationToken}, json = {"portal_type": "friends", "location": {"latitude": lat, "longitude": long}}, verify = False)
         
         if (response.status_code == 200):
             #authenticationToken = response.cookies[".AspNetCore.Identity.Application"]
@@ -132,7 +133,7 @@ class UserModule:
         #add attribute to server
         authenticationToken = str(UserModule.usersOther["authentication_token"].iloc[index])
         myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-        response = requests.post("https://localhost:5001/api/User/Friends/AddAttribute", json = {"attribute": attr}, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
+        response = requests.post("https://www.purpleorangepink.com/api/User/Friends/AddAttribute", json = {"attribute": attr}, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
         
         if (response.status_code == 200):
             #authenticationToken = response.cookies[".AspNetCore.Identity.Application"]
@@ -179,14 +180,31 @@ class UserModule:
         for u in randomList:
             UserModule.addFriendAttribute(u, attributeName)
         
+    def setBirthdateOfUsers(): 
+        for u in UserModule.users.index.values.tolist():
+            birthdate = datetime.datetime(random.randint(1970, 2002), random.randint(1, 12), random.randint(1, 28))
+            
+            authenticationToken = str(UserModule.usersOther["authentication_token"].iloc[u])
+            myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
+            response = requests.post("https://www.purpleorangepink.com/api/User/Generic/UpdateUserInformation", json = {"portal_type": "friends", "birthdate": birthdate.strftime("%d/%m/%Y")}, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
+                        
+            if (response.status_code == 200):
+                #authenticationToken = response.cookies[".AspNetCore.Identity.Application"]
+                None
+            elif (response.status_code == 404):
+                print("got status code 404 for set birthdate")
+                print(response.content)
+            else:
+                print("got unknown status code for set birthdate: " + str(response.status_code))
+                print(response.request.body)
+    
+        
     def makeFriendSearchQueryRandom(radius, pageSize, numAttributes, minAge = 18, maxAge = 100, gender = "", pageNumber = 1, provideLocation = False):
         #list of attributes
         attributes = []
         
         #get index of user
         index = random.choice(UserModule.users.index.values.tolist())
-        
-        print(UserModule.friendAttributes.shape[0])
         
         #get random list of attributes of quantity numAttributes
         for i in range(numAttributes):
@@ -206,7 +224,7 @@ class UserModule:
         
         authenticationToken = str(UserModule.usersOther["authentication_token"].iloc[index])
         myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-        response = requests.post("https://localhost:5001/api/User/Friends/SearchUsers", json = body, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
+        response = requests.post("https://www.purpleorangepink.com/api/User/Friends/SearchUsers", json = body, cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
         
         if (response.status_code == 200):
             #authenticationToken = response.cookies[".AspNetCore.Identity.Application"]
@@ -228,7 +246,7 @@ class UserModule:
         for i in UserModule.users.index.tolist():
             authenticationToken = str(UserModule.usersOther["authentication_token"].iloc[i])
             myHeaders = {"User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
-            response = requests.delete("https://localhost:5001/api/AccountManager/Remove", cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
+            response = requests.delete("https://www.purpleorangepink.com/api/AccountManager/Remove", cookies={".AspNetCore.Identity.Application": authenticationToken}, verify = False)
               
             if (response.status_code == 200):
                 None          
@@ -250,3 +268,171 @@ class UserModule:
         UserModule.users = pandas.read_csv("data/created_users.csv")
         UserModule.usersOther = pandas.read_csv("data/created_users_authentication.csv")
         UserModule.friendAttributes = pandas.read_csv("data/friend_attributes.csv")
+        
+    #ACTIVITIES
+    #list of users
+    
+    #dont save activity details, just save user-to-activity links
+    
+    activities = pandas.DataFrame(columns={"activity_id"})
+    activityLinks = pandas.DataFrame(columns={"user_id", "activity_id", "position"})
+    
+    def createRandomActivities(numActivities, lat, long, radius):
+        for i in range(numActivities):
+            #get random user
+            userIndex = random.choice(UserModule.users.index.values.tolist())
+            userAuthToken = str(UserModule.usersOther["authentication_token"].iloc[i])
+            
+            #generate user values
+            title = (random.choice(UserModule.lettersAndNumbers) for i in range(10))
+            
+            dateTime = datetime.datetime(random.randint(1970, 2002), random.randint(1, 12), random.randint(1, 28))
+
+            isPhysical = (random.randint(0, 9) > 2)
+            
+            #make random location
+            
+            #get radial components
+            rx = random.SystemRandom().uniform(-1.0, 1.0) * radius
+            ry = math.sqrt(radius ** 2.0 - rx ** 2.0) * (1.0 - 2.0 * float(random.randint(0, 1)))
+            
+            #get longitude and latitude
+            latitude = ((ry / 24901.461 * 360)) + lat
+            longitude = ((rx / 24901.461 * 360)) + long
+
+            size = random.randint(0, 10)
+            
+            gender = ''.join(random.choice(["all", "all", "all", "male", "female"]) for i in range (1))
+            
+            minAge = random.randint(18, 25)
+            maxAge = random.randint(40, 100)
+
+            body = {
+                "portal_type": "friends",
+                "title": title,
+                "datetime": dateTime.strftime("%d/%m/%Y %-H:%-S"),
+                "isPhysical": isPhysical,
+                "gender": gender,
+                "minimumAge": minAge,
+                "maximumAge": maxAge
+            }
+
+            if (isPhysical):
+                #set target location
+                body.targetLocation = {
+                    "latitude": latitude,
+                    "longitude": longitude,
+                }
+            
+                #20% chance we set target location
+                if (random.randint(0, 9) > 7):
+                    body.searchLocation = {
+                        "latitude": latitude,
+                        "longitude": longitude,
+                }
+            else:
+                #80% chance we set target location
+                if (random.randint(0, 9) > 1):
+                    body.searchLocation = {
+                    "latitude": latitude,
+                    "longitude": longitude,
+                }
+            
+            #create user in server
+            myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
+            response = requests.post("https://www.purpleorangepink.com/api/Friends/CreateActivity", json = body, cookies={".AspNetCore.Identity.Application": userAuthToken}, verify = False)
+            
+            activityId = ""
+            
+            if (response.status_code == 200):
+                activityId = response.json()["attribute_name"]
+            elif (response.status_code == 404):
+                print("got status code 404 for creating activity")
+                #print(response.content)
+                print(response.raw)
+                print()
+            else:
+                print("got unknown status code for creating activity: " + str(response.status_code))
+                #print(response.request.body)
+                print()
+                print(response.content)
+                print()
+                
+        UserModule.activities = UserModule.activities.append({"activity_id": activityId}, ignore_index = True)    
+        UserModule.activityLinks = UserModule.activityLinks.append({"user_index": userIndex, "activity_id": activityId, "position": "admin"}, ignore_index=True)
+    
+    def saveActivities(): 
+        UserModule.activities.to_csv("data/created_activities.csv", index=False)
+        UserModule.activityLinks.to_csv("data/created_activity_links.csv", index=False)
+        
+    def loadExistingActivities():
+        UserModule.activities = pandas.read_csv("data/created_activities.csv")
+        UserModule.activityLinks = pandas.read_csv("data/created_activity_links.csv")
+    
+    def joinUsersToActivitiesRandom(numUsers, numActivitiesPerUser):
+        for iu in UserModule.users.index.values.tolist():
+            userAuthToken = str(UserModule.usersOther["authentication_token"].iloc[ui])
+            
+            randomActivityRange = random.randint(1, numActivitiesPerUser)
+            
+            for ia in range (randomActivityRange):
+                activityIndex = random.choice(UserModule.activities.index.values.tolist())
+                activityId = UserModule.activities["activity_id"].iloc[activityIndex]
+                
+                myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
+                response = requests.get("https://www.purpleorangepink.com/api/Friends/RequestToJoinActivityAsParticipant?id=" + activityId, cookies={".AspNetCore.Identity.Application": userAuthToken}, verify = False)
+                 
+                if (response.status_code == 404):
+                    print("got status code 404 for creating activity")
+                    #print(response.content)
+                    print(response.raw)
+                    print()
+                else:
+                    print("got unknown status code for creating activity: " + str(response.status_code))
+                    #print(response.request.body)
+                    print()
+                    print(response.content)
+                    print()
+                
+                #add to activities links
+                UserModule.activityLinks = UserModule.activityLinks.append({"user_index": ui, "activity_id": activityId, "position": "participant"}, ignore_index=True)
+
+        
+    
+    def joinUserToActivity(userIndex, activityIndex):
+        return 0
+    
+    def adminUsersToActivitiesRandom(numUsers, numActivitiesPerUser):
+        for iu in UserModule.users.index.values.tolist():
+            userAuthToken = str(UserModule.usersOther["authentication_token"].iloc[ui])
+            
+            randomActivityRange = random.randint(1, numActivitiesPerUser)
+            
+            for ia in range (randomActivityRange):
+                activityIndex = random.choice(UserModule.activities.index.values.tolist())
+                activityId = UserModule.activities["activity_id"].iloc[activityIndex]
+                
+                myHeaders = {"Content-Type": "application/json", "User-Agent": "PostmanRuntime/7.28.4", "Accept": "*/*", "Connection": "keep-alive", "Host": "Testing_Program"}
+                response = requests.get("https://www.purpleorangepink.com/api/Friends/JoinActivityAsAdmin?id=" + activityId, cookies={".AspNetCore.Identity.Application": userAuthToken}, verify = False)
+                 
+                if (response.status_code == 404):
+                    print("got status code 404 for creating activity")
+                    #print(response.content)
+                    print(response.raw)
+                    print()
+                else:
+                    print("got unknown status code for creating activity: " + str(response.status_code))
+                    #print(response.request.body)
+                    print()
+                    print(response.content)
+                    print()
+                
+                #add to activities links
+                UserModule.activityLinks = UserModule.activityLinks.append({"user_index": ui, "activity_id": activityId, "position": "admin"}, ignore_index=True)
+
+    
+    def adminUserToActivity(userIndex, activityIndex):
+        return 0
+    
+    def removeExistingActivities():
+        UserModule.saveActivities()
