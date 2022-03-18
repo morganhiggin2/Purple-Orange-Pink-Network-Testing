@@ -4,6 +4,7 @@ from torch import floor
 from user_module import UserModule
 import datetime
 import random
+import math
 
 #file for query tests
 class FriendTests:
@@ -55,10 +56,10 @@ class FriendTests:
         UserModule.saveActivities()
         
         #join users to activities
-        UserModule.joinUsersToActivitiesRandom(FriendTests.numUsers, floor(FriendTests.numActivities / 2))
+        UserModule.joinUsersToActivitiesRandom(FriendTests.numUsers, math.floor(FriendTests.numActivities / 2))
         
         #join users to admins of activities
-        UserModule.adminUsersToActivitiesRandom(floor(FriendTests.numUsers / 2), floor(FriendTests.numActivities / 4))
+        UserModule.adminUsersToActivitiesRandom(math.floor(FriendTests.numUsers / 2), math.floor(FriendTests.numActivities / 4))
         
         #make query
         #UserModule.makeFriendSearchQueryRandom(2000, 2, 2)
@@ -71,7 +72,7 @@ class FriendTests:
         UserModule.loadExistingUsers()
         
         #load activities
-        UserModule.loadExistingActivities()
+        #UserModule.loadExistingActivities()
         
         #can do testing for joining, admin requesting, removing from, activties from postman using the admin account
         
@@ -83,9 +84,7 @@ class FriendTests:
     
 #FriendTests.testOneStart()
 
-
-
-#CHECK IF THERE ARE STILL IN SERVER, IF SO, RUN THIS
+#CHECK IF THERE ARE TESTING ENTITIES STILL IN SERVER, IF SO, RUN TEST END
 FriendTests.testOneEnd()
 
 
